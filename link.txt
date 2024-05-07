@@ -1,0 +1,13 @@
+https://bubble-dev.tistory.com/entry/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5-Hill-climbing-search
+https://www.youtube.com/watch?v=HZyO66OwZkU
+https://www.youtube.com/watch?v=mjfIOBrU4Sc&t=244s
+https://www.youtube.com/watch?v=P0RT---B09Q
+https://blog.naver.com/gsitm2006/222575229430
+https://www.youtube.com/watch?v=WNxCenKxkXI
+https://www.youtube.com/watch?v=Aut32pR5PQA&t=69s
+
+TSP and ACO with Genetic Alogorithm
+Travelling Salesman Problem
+Ant Colony Optimization aka ACO
+https://blog.naver.com/setpeaceup7/223060384648
+https://www.youtube.com/watch?v=Sk9QQUGMdY8
