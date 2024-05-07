@@ -5,14 +5,14 @@ import operator
 import matplotlib.pyplot as plt
 
 # Setting
-SIZEOF_MAP_X = 500
-SIZEOF_MAP_Y = 500
+SIZEOF_MAP_X = 800
+SIZEOF_MAP_Y = 800
 
-CITY_COUNT = 50 # 도시 갯수 & 유전자 갯수
-CHROMOSOME_SIZE = 600  # 염색체 크기
-GENERATION_COUNT = 500
+CITY_COUNT = 200  # 도시 갯수 & 유전자 갯수
+CHROMOSOME_SIZE = 700  # 염색체 크기
+GENERATION_COUNT = 2000
 SELECT_GENE_COUNT = 20
-
+MUTATION_RATE = 0.02
 
 # Class
 class City:
@@ -32,7 +32,6 @@ class City:
 
     def __str__(self) -> str:
         return f"City({self.x}, {self.y})"
-
 
 class Fitness:
     def __init__(self, route: list[City]):
@@ -103,7 +102,9 @@ def rankGenes(chromosome: list[Gene]):
     fitnessResults = {}
     for i in range(len(chromosome)):
         fitnessResults[i] = chromosome[i].fitness.value
-    sorted_index=sorted(fitnessResults.items(), key=operator.itemgetter(1), reverse=True)
+    sorted_index = sorted(
+        fitnessResults.items(), key=operator.itemgetter(1), reverse=True
+    )
     return [chromosome[i[0]] for i in sorted_index]
 
 
@@ -124,6 +125,17 @@ def breed(parent1, parent2):
     return child1 + child2
 
 
+def mutate(gene: Gene, mutationRate):
+    indiviual = gene.route
+    for swapped in range(len(indiviual)):
+        if r.random() < mutationRate:
+            swapWith = int(r.random() * len(indiviual))
+            temp = indiviual[swapped]
+            indiviual[swapped] = indiviual[swapWith]
+            indiviual[swapWith] = temp
+    return indiviual
+
+
 def Crossover(ranked_genes: list[Gene]):
     selected_genes = ranked_genes[:SELECT_GENE_COUNT]
     result = []
@@ -133,8 +145,15 @@ def Crossover(ranked_genes: list[Gene]):
         result.append(Gene(breed(gene1.route, gene2.route), False))
     return result
 
+def MutateChromosome(chromosome, mutationRate):
+    result = []
+    for i in range(len(chromosome)):
+        mutatedGene = mutate(chromosome[i], mutationRate)
+        result.append(Gene(mutatedGene, False))
+    return result
 
 def Generate(chromosome):
     ranked_genes = rankGenes(chromosome)
     crossovered_genes = Crossover(ranked_genes)
-    return crossovered_genes
+    mutated_genes = MutateChromosome(crossovered_genes, MUTATION_RATE)
+    return mutated_genes
