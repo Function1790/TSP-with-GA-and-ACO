@@ -5,13 +5,13 @@ import operator
 import matplotlib.pyplot as plt
 
 # Setting
-SIZEOF_MAP_X = 10
-SIZEOF_MAP_Y = 10
+SIZEOF_MAP_X = 500
+SIZEOF_MAP_Y = 500
 
-CITY_COUNT = 100 # 도시 갯수 & 유전자 갯수
-CHROMOSOME_SIZE = 700  # 염색체 크기
+CITY_COUNT = 50 # 도시 갯수 & 유전자 갯수
+CHROMOSOME_SIZE = 600  # 염색체 크기
 GENERATION_COUNT = 500
-SELECT_GENE_COUNT = 15
+SELECT_GENE_COUNT = 20
 
 
 # Class
