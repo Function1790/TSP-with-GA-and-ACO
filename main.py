@@ -1,5 +1,7 @@
 from TSP import *
-from time import sleep
+import matplotlib.pyplot as plt
+import json
+
 
 def displayResult(route):
     ax.clear()
@@ -14,9 +16,14 @@ def displayResult(route):
     ax.plot(lines_x, lines_y, "r")
     plt.show()
 
-cityList = []
-for i in range(CITY_COUNT):
-    cityList.append(City(r.randint(0, SIZEOF_MAP_X), r.randint(0, SIZEOF_MAP_Y)))
+
+f = open("./record/map.txt", "r")
+map_data = json.loads(f.read())
+f.close()
+cityList = [City(i[0], i[1]) for i in map_data]
+# cityList = []
+# for i in range(CITY_COUNT):
+#    cityList.append(City(r.randint(0, SIZEOF_MAP_X), r.randint(0, SIZEOF_MAP_Y)))
 
 chromosome = createChromosome(cityList)
 
@@ -25,7 +32,7 @@ plt.ion()
 plt.xlim(0, SIZEOF_MAP_X)
 plt.ylim(0, SIZEOF_MAP_Y)
 record_fitness = []
-for i in range(2500):
+for i in range(300):
     measureGeneFitness(chromosome)
     top_gene = rankGenes(chromosome)[0]
     route = top_gene.route
@@ -37,7 +44,8 @@ for i in range(2500):
 
     chromosome = Generate(chromosome)
 
-f = open("record.txt", "w")
+f = open("./record/fitness.txt", "w")
 f.writelines(str(record_fitness))
+f.close()
 displayResult(route)
 plt.pause(10)

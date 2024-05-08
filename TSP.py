@@ -5,14 +5,15 @@ import operator
 import matplotlib.pyplot as plt
 
 # Setting
-SIZEOF_MAP_X = 800
-SIZEOF_MAP_Y = 800
+SIZEOF_MAP_X = 400
+SIZEOF_MAP_Y = 400
 
-CITY_COUNT = 200  # 도시 갯수 & 유전자 갯수
-CHROMOSOME_SIZE = 700  # 염색체 크기
+CITY_COUNT = 30  # 도시 갯수 & 유전자 갯수
+CHROMOSOME_SIZE = 800  # 염색체 크기
 GENERATION_COUNT = 2000
 SELECT_GENE_COUNT = 20
-MUTATION_RATE = 0.02
+MUTATION_RATE = 0.07
+
 
 # Class
 class City:
@@ -20,18 +21,12 @@ class City:
         self.x = x
         self.y = y
 
-    def setPos(self, x, y):
-        self.x = x
-        self.y = y
-
-    def toArray(self) -> np.array:
-        return np.array([self.x, self.y])
-
     def distance(self, city):
         return m.sqrt((self.x - city.x) ** 2 + (self.y - city.y) ** 2)
 
     def __str__(self) -> str:
         return f"City({self.x}, {self.y})"
+
 
 class Fitness:
     def __init__(self, route: list[City]):
@@ -145,12 +140,14 @@ def Crossover(ranked_genes: list[Gene]):
         result.append(Gene(breed(gene1.route, gene2.route), False))
     return result
 
+
 def MutateChromosome(chromosome, mutationRate):
     result = []
     for i in range(len(chromosome)):
         mutatedGene = mutate(chromosome[i], mutationRate)
         result.append(Gene(mutatedGene, False))
     return result
+
 
 def Generate(chromosome):
     ranked_genes = rankGenes(chromosome)
