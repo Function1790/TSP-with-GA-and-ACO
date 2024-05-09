@@ -9,8 +9,9 @@ f.close()
 cityList = [City(i[0], i[1]) for i in map_data]
 cityListIndex = [i for i in range(len(map_data))]
 
-INFLUENCE_ALPHA = 2
-INFLUENCE_BETA = 2
+INFLUENCE_ALPHA = 50
+INFLUENCE_BETA = 1
+INIT_PHEROMONE = 0.1
 
 
 class Ant:
@@ -42,7 +43,6 @@ class Ant:
     def addPheromoneTo(self, matrix, cityList):
         if self.pheromone == 0:
             self.measurePheromone(cityList)
-
         for i in self.route:
             fromCityIndex = self.route[i]
             if i + 1 < len(self.route):
@@ -65,10 +65,13 @@ def getCostMatrix(cityList: list[City]):
 
 
 def getPheromonMatrix(antList: list[Ant]):
-    pheromonMatrix = np.zeros([CITY_COUNT, CITY_COUNT])
+    pheromonMatrix = np.ones([CITY_COUNT, CITY_COUNT]) * INIT_PHEROMONE
     for i in antList:
         pheromonMatrix = i.addPheromoneTo(pheromonMatrix, cityList)
     return pheromonMatrix
+
+def updatePheromonMatrix(pheromonMatrix, ant:Ant):
+    pheromonMatrix = ant.addPheromoneTo(pheromonMatrix, cityList)
 
 
 def getProbability(pheromone, distance):
@@ -79,6 +82,7 @@ def getProbabilityIndex(probabilities) -> int:
     """누적합을 이용한 확률 선발"""
     prefixSum = 0
     randValue = r.random()
+    #print(np.round(np.array(probabilities)*100))
     for i in range(len(probabilities)):
         # ex) probabilities = [0.2, 0.3, 0.4, 0.1], randValue= 0.76
         # i=0 -> (0, 0.2) | i=1 -> (0.2, 0.5) | i=3 -> *(0.5, 0.9)*
@@ -99,7 +103,7 @@ def selectNextIndex(currentIndex, routeSample, pheromoneMatrix, costMatrix):
         totalProbability += probability
 
     # 조건부 확률로 업데이트
-    if len(probabilities)==1:
+    if len(probabilities) == 1:
         return 0
     probabilities = [i / totalProbability for i in probabilities]
     # routeSample의 조건부 확률에 따른 index 추출
