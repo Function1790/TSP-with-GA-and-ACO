@@ -1,6 +1,7 @@
 from ACO import *
-from TSP import SIZEOF_MAP_X, SIZEOF_MAP_Y
+from GA import SIZEOF_MAP_X, SIZEOF_MAP_Y
 import matplotlib.pyplot as plt
+import operator
 
 
 def displayResult(route):
@@ -17,13 +18,25 @@ def displayResult(route):
     plt.show()
 
 
+def rankRoute(routeList):
+    """거리가 가장 짧은 순으로 경로 배열"""
+    routesResults = {}
+    for i in range(len(routeList)):
+        routesResults[i] = routeList[i][1]
+    sorted_index = sorted(
+        routesResults.items(), key=operator.itemgetter(1), reverse=False
+    )
+    return [routeList[i[0]] for i in sorted_index]
+
+
 fig, ax = plt.subplots()
 plt.ion()
 plt.xlim(0, SIZEOF_MAP_X)
 plt.ylim(0, SIZEOF_MAP_Y)
 
-#antList = [Ant(r.sample(cityListIndex, len(cityListIndex))) for i in range(100)]
-antList = []
+# antList = [Ant(r.sample(cityListIndex, len(cityListIndex))) for i in range(100)]
+antList: list[Ant] = []
+record_ant = []
 costMatrix = getCostMatrix(cityList)
 pheromoneMatrix = np.ones([CITY_COUNT, CITY_COUNT]) * INIT_PHEROMONE
 for i in range(500000):
@@ -31,5 +44,8 @@ for i in range(500000):
     updatePheromonMatrix(pheromoneMatrix, antList[i])
     print(i)
     route = createRoadByACO(costMatrix, pheromoneMatrix)
-    displayResult(route)
+    record_ant.append([route, antList[i].distance])
+    ranked = rankRoute(record_ant)
+
+    displayResult(ranked[0][0])
     plt.pause(0.01)

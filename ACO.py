@@ -1,4 +1,4 @@
-from TSP import City, CITY_COUNT
+from GA import City, CITY_COUNT
 import json
 import numpy as np
 import random as r
@@ -9,9 +9,10 @@ f.close()
 cityList = [City(i[0], i[1]) for i in map_data]
 cityListIndex = [i for i in range(len(map_data))]
 
-INFLUENCE_ALPHA = 50
-INFLUENCE_BETA = 1
-INIT_PHEROMONE = 0.1
+INFLUENCE_ALPHA = 1  # 페로몬 영향
+INFLUENCE_BETA = 1  # 거리 영향
+INIT_PHEROMONE = 0.1  # 초기 페로몬
+VOLATILIZATION_FACTOR = 0.5  # 휘발 계수
 
 
 class Ant:
@@ -49,6 +50,8 @@ class Ant:
                 toCityIndex = self.route[i + 1]
             else:
                 toCityIndex = self.route[0]
+            matrix[fromCityIndex][toCityIndex] *= VOLATILIZATION_FACTOR
+            matrix[toCityIndex][fromCityIndex] *= VOLATILIZATION_FACTOR
             matrix[fromCityIndex][toCityIndex] += self.pheromone
             matrix[toCityIndex][fromCityIndex] += self.pheromone
         return matrix
@@ -70,7 +73,8 @@ def getPheromonMatrix(antList: list[Ant]):
         pheromonMatrix = i.addPheromoneTo(pheromonMatrix, cityList)
     return pheromonMatrix
 
-def updatePheromonMatrix(pheromonMatrix, ant:Ant):
+
+def updatePheromonMatrix(pheromonMatrix, ant: Ant):
     pheromonMatrix = ant.addPheromoneTo(pheromonMatrix, cityList)
 
 
@@ -82,7 +86,7 @@ def getProbabilityIndex(probabilities) -> int:
     """누적합을 이용한 확률 선발"""
     prefixSum = 0
     randValue = r.random()
-    #print(np.round(np.array(probabilities)*100))
+    # print(np.round(np.array(probabilities)*100))
     for i in range(len(probabilities)):
         # ex) probabilities = [0.2, 0.3, 0.4, 0.1], randValue= 0.76
         # i=0 -> (0, 0.2) | i=1 -> (0.2, 0.5) | i=3 -> *(0.5, 0.9)*

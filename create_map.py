@@ -1,4 +1,4 @@
-from TSP import SIZEOF_MAP_X, SIZEOF_MAP_Y, CITY_COUNT
+from GA import SIZEOF_MAP_X, SIZEOF_MAP_Y, CITY_COUNT
 import matplotlib.pyplot as plt
 import random as r
 

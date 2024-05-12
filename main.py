@@ -1,4 +1,4 @@
-from TSP import *
+from GA import *
 import matplotlib.pyplot as plt
 import json
 
