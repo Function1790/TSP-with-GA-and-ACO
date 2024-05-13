@@ -11,8 +11,9 @@ cityListIndex = [i for i in range(len(map_data))]
 
 INFLUENCE_ALPHA = 1  # 페로몬 영향
 INFLUENCE_BETA = 1  # 거리 영향
-INIT_PHEROMONE = 0.1  # 초기 페로몬
-VOLATILIZATION_FACTOR = 0.5  # 휘발 계수
+INIT_PHEROMONE = 0.5  # 초기 페로몬
+VOLATILIZATION_FACTOR = 0.05  # 휘발 계수
+VALUE_OF_Q0 = 0.5
 
 
 class Ant:
@@ -52,8 +53,12 @@ class Ant:
                 toCityIndex = self.route[0]
             matrix[fromCityIndex][toCityIndex] *= VOLATILIZATION_FACTOR
             matrix[toCityIndex][fromCityIndex] *= VOLATILIZATION_FACTOR
-            matrix[fromCityIndex][toCityIndex] += self.pheromone
-            matrix[toCityIndex][fromCityIndex] += self.pheromone
+            matrix[fromCityIndex][toCityIndex] += (
+                1 - VOLATILIZATION_FACTOR
+            ) * self.pheromone
+            matrix[toCityIndex][fromCityIndex] += (
+                1 - VOLATILIZATION_FACTOR
+            ) * self.pheromone
         return matrix
 
 
@@ -110,6 +115,16 @@ def selectNextIndex(currentIndex, routeSample, pheromoneMatrix, costMatrix):
     if len(probabilities) == 1:
         return 0
     probabilities = [i / totalProbability for i in probabilities]
+
+    chanceOfQ0 = r.random()
+    if chanceOfQ0 < VALUE_OF_Q0:
+        maxProbability = max(probabilities)
+        maxIndex = -1
+        for i in range(len(probabilities)):
+            if maxProbability == probabilities[i]:
+                maxIndex = i
+                break
+        return maxIndex
     # routeSample의 조건부 확률에 따른 index 추출
     return getProbabilityIndex(probabilities)
 

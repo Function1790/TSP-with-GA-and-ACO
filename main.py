@@ -32,7 +32,7 @@ plt.ion()
 plt.xlim(0, SIZEOF_MAP_X)
 plt.ylim(0, SIZEOF_MAP_Y)
 record_fitness = []
-for i in range(300):
+for i in range(50):
     measureGeneFitness(chromosome)
     top_gene = rankGenes(chromosome)[0]
     route = top_gene.route
