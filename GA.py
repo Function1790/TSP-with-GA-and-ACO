@@ -8,11 +8,11 @@ import matplotlib.pyplot as plt
 SIZEOF_MAP_X = 40
 SIZEOF_MAP_Y = 40
 
-CITY_COUNT = 5  # 도시 갯수 & 유전자 갯수
+CITY_COUNT = 20  # 도시 갯수 & 유전자 갯수
 CHROMOSOME_SIZE = 800  # 염색체 크기
 GENERATION_COUNT = 2000
 SELECT_GENE_COUNT = 20
-MUTATION_RATE = 0.07
+MUTATION_RATE = 0.1
 
 
 # Class

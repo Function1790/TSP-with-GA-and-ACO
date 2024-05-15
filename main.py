@@ -1,6 +1,8 @@
 from GA import *
 import matplotlib.pyplot as plt
 import json
+import time
+
 
 
 def displayResult(route):
@@ -32,8 +34,11 @@ plt.ion()
 plt.xlim(0, SIZEOF_MAP_X)
 plt.ylim(0, SIZEOF_MAP_Y)
 record_fitness = []
+record_time = []
+start = time.time()
 for i in range(300):
     measureGeneFitness(chromosome)
+    record_time.append(time.time() - start)
     top_gene = rankGenes(chromosome)[0]
     route = top_gene.route
     record_fitness.append(top_gene.fitness.value)
@@ -46,6 +51,9 @@ for i in range(300):
 
 f = open("./record/fitness.txt", "w")
 f.writelines(str(record_fitness))
+f.close()
+f = open("./record/time.txt", "w")
+f.writelines(str(record_time))
 f.close()
 displayResult(route)
 plt.pause(10)
