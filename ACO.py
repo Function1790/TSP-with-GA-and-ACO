@@ -13,7 +13,7 @@ INFLUENCE_ALPHA = 1  # 페로몬 영향
 INFLUENCE_BETA = 1  # 거리 영향
 INIT_PHEROMONE = 0.5  # 초기 페로몬
 VOLATILIZATION_FACTOR = 0.05  # 휘발 계수
-VALUE_OF_Q0 = 0.5
+VALUE_OF_Q0 = 0.7
 
 
 class Ant:
@@ -23,7 +23,7 @@ class Ant:
         self.pheromone = 0  # 페로몬 값 = 1 / 거리
 
     def measureDistance(self, cityList):
-        if self.distance != 0:  # 거리가 측정되었다면
+        if self.distance != 0:  # 거리가 측정W되었다면
             return self.distance
 
         totalDistance = 0

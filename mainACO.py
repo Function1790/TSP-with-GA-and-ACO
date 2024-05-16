@@ -2,6 +2,7 @@ from ACO import *
 from GA import SIZEOF_MAP_X, SIZEOF_MAP_Y
 import matplotlib.pyplot as plt
 import operator
+import time
 
 
 def displayResult(route):
@@ -58,25 +59,41 @@ antList: list[Ant] = []
 record_ant = []
 costMatrix = getCostMatrix(cityList)
 pheromoneMatrix = np.ones([CITY_COUNT, CITY_COUNT]) * INIT_PHEROMONE
-for i in range(1000):
+superFast = [[], 0]
+record_fitness = []
+record_time = []
+start = time.time()
+for i in range(300):
+    print(i)
     # antList.append(Ant(r.sample(cityListIndex, len(cityListIndex))))
-    #antList = [Ant(r.sample(cityListIndex, len(cityListIndex))) for i in range(100)]
-    antList = [Ant(createRoadByACO(costMatrix, pheromoneMatrix)) for i in range(40)]
+    # antList = [Ant(r.sample(cityListIndex, len(cityListIndex))) for i in range(100)]
+    antList = [Ant(createRoadByACO(costMatrix, pheromoneMatrix)) for i in range(100)]
     for j in antList:
         updatePheromonMatrix(pheromoneMatrix, j)
     # print(i)
-    #route = createRoadByACO(costMatrix, pheromoneMatrix)
+    # route = createRoadByACO(costMatrix, pheromoneMatrix)
     # record_ant.append([route, antList[i].distance])
     ranked = rankRoute(antList)
     fastest = ranked[0][0]
-    fitness = 1 / getDistance(fastest) * 50
+    fitness = 1 / ranked[0][1]
+    if superFast[1] < fitness:
+        superFast[0] = fastest
+        superFast[1] = fitness
     for j in range(len(fastest)):
         a = fastest[j]
         if j + 1 < len(fastest):
             b = fastest[j + 1]
         else:
             b = fastest[0]
-        pheromoneMatrix[a][b] += fitness
-        pheromoneMatrix[b][a] += fitness
-    displayResult(ranked[0][0])
+        pheromoneMatrix[a][b] += fitness * 50
+        pheromoneMatrix[b][a] += fitness * 50
+    displayResult(superFast[0])
+    record_time.append(time.time() - start)
+    record_fitness.append(superFast[1])
     plt.pause(0.01)
+f = open("./record/fitnessACO.txt", "w")
+f.writelines(str(record_fitness))
+f.close()
+f = open("./record/timeACO.txt", "w")
+f.writelines(str(record_time))
+f.close()

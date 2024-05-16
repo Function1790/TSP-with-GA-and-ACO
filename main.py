@@ -38,13 +38,13 @@ record_time = []
 start = time.time()
 for i in range(300):
     measureGeneFitness(chromosome)
-    record_time.append(time.time() - start)
     top_gene = rankGenes(chromosome)[0]
     route = top_gene.route
-    record_fitness.append(top_gene.fitness.value)
     print(i + 1, top_gene.fitness.value)
 
     displayResult(route)
+    record_time.append(time.time() - start)
+    record_fitness.append(top_gene.fitness.value)
     plt.pause(0.00001)
 
     chromosome = Generate(chromosome)
